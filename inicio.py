@@ -6,7 +6,9 @@ import urllib.parse
 from sqlalchemy import create_engine, MetaData
 from sqlalchemy.ext.automap import automap_base
 from animal import Animal
+from avaliacao import Avaliacao
 from sqlalchemy.orm import sessionmaker
+from textblob import TextBlob
 # definindo objeto flask
 app = Flask(__name__)
 
@@ -59,6 +61,7 @@ Base.prepare() # mapeando
 
 # Ligando com a classe
 Animal =  Base.classes.animal
+Avaliacao = Base.classes.avaliacao
 
 # Criar a sessão do SQLAlchemy
 Session = sessionmaker(bind=engine)
@@ -86,6 +89,37 @@ def inserir_animal():
         session_db.close()
 
     return redirect(url_for('pagina_inicial'))
+
+@app.route('/avaliacao')
+def mostrar_pagina():
+    return render_template('avaliacao.html')
+
+@app.route('/addavalia',methods=['POST','GET'])
+def inserir_avaliacao():
+    session_a = Session() # inicia a partida de futebol
+    texto = request.form['texto']
+    blob_pt = TextBlob(texto)
+    polaridade = blob_pt.sentiment.polarity
+    avaliacao = Avaliacao(texto=texto,polaridade=polaridade) #bola
+    try:
+       session_a.add(avaliacao) # passe 
+       session_a.commit()  # gol
+    except:
+       session_a.rollback() #var cancela o gol
+    finally:
+       session_a.close() # encerramento da partida
+    return redirect(url_for('listar_avalia'))
+
+
+
+
+@app.route("/listavalia")
+def listar_avalia():
+    session_db = Session()
+    avaliacoes = session_db.query(Avaliacao).all()
+     # Consulta todos os registros na tabela Nivel
+    return render_template("listavalia.html",avaliacoes=avaliacoes)
+
 
 # definindo com o programa principal 
 if __name__ == "__main__":
