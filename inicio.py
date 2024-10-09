@@ -111,6 +111,14 @@ def inserir_avaliacao():
     return redirect(url_for('listar_avalia'))
 
 
+@app.route("/avaliazoo")
+def avaliazoo():
+    sessao_db = Session()
+    avaliacoes = sessao_db.query(Avaliacao).all()
+    return render_template('listavalia2.html',avaliacoes=avaliacoes)
+
+
+
 
 
 @app.route("/listavalia")

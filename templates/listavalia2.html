@@ -9,13 +9,10 @@
 </head>
 
 <body>
-
-
-    <div class="container mt-5">
-        <table class="table table-bordered table-striped">
-            <thead class="thead-dark">
+    
+        <table border="1">
+            <thead >
                 <tr>
-                    <th>ID</th>
                     <th>texto</th>
                     <th>polaridade</th>
                     <th>Editar</th>
@@ -23,6 +20,28 @@
                 </tr>
             </thead>
             <tbody>
+                {% for avalia in avaliacoes%}
+                <tr>
+                    <td>{{ avalia.texto }}</td>
+                    <td>{{avalia.polaridade}}</td>
+                    <td><a href="#">alterar</a></td>
+                    <td><a href="#">remover</a></td>
+                </tr>
+                {% endfor %}
+                
+              
+            </tbody>
+        </table>
+
+
+</body>
+
+</html>
+
+
+<!---
+
+ <tbody>
                 {% for avalia in avaliacoes %}
                 <tr>
                     <td>{{ avalia.texto }}</td>
@@ -33,10 +52,9 @@
                 </tr>
                 {% endfor %}
             </tbody>
-        </table>
 
 
-    </div>
-</body>
 
-</html>
+
+
+-->
