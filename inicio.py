@@ -71,6 +71,11 @@ Session = sessionmaker(bind=engine)
 def pagina_inicial():
     return render_template("index.html")
 
+@app.route("/animal",methods=['POST','GET'])
+def mostrar_animal():
+    return render_template('animal.html')
+
+
 @app.route('/novoanimal', methods=['POST','GET'])
 def inserir_animal():
     session_db = Session()  # Criar uma nova sessão
@@ -117,16 +122,43 @@ def avaliazoo():
     avaliacoes = sessao_db.query(Avaliacao).all()
     return render_template('listavalia2.html',avaliacoes=avaliacoes)
 
-
-
-
-
 @app.route("/listavalia")
 def listar_avalia():
     session_db = Session()
     avaliacoes = session_db.query(Avaliacao).all()
      # Consulta todos os registros na tabela Nivel
-    return render_template("listavalia.html",avaliacoes=avaliacoes)
+    return render_template("listavalia2.html",avaliacoes=avaliacoes)
+
+@app.route('/excluir_avalia/<int:id>', methods=['POST','GET'])
+def excluir_avalia(id):
+    session_db = Session()
+    avaliacao = session_db.query(Avaliacao).filter_by(id=id).first()
+    if avaliacao:
+        try:
+            session_db.delete(avaliacao)
+            session_db.commit()
+        except:
+            session_db.rollback()
+        finally:
+            session_db.close()
+    return redirect(url_for('listar_avalia'))
+
+
+@app.route('/excluiravaliazoo/<int:id>',methods=['POST','GET'])
+def excluir_avalia_zoo(id):
+    # define uma sessao
+    session_del = Session()
+    avaliacao = session_del.query(Avaliacao).filter_by(id=id).first()
+    if avaliacao:
+        try:
+            session_del.delete(avaliacao)
+            session_del.commit()
+        except:
+            session_del.rollback()
+        finally:
+            session_del.close()
+    return redirect(url_for('listar_avalia'))
+
 
 
 # definindo com o programa principal 
